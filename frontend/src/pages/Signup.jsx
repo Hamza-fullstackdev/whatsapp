@@ -95,6 +95,12 @@ const Signup = () => {
               </div>
               <div>
                 <div className='mb-1 mt-2'>
+                  <Label htmlFor='password' value='password' />
+                </div>
+                <TextInput id='password' placeholder='*********' />
+              </div>
+              <div>
+                <div className='mb-1 mt-2'>
                   <Label htmlFor='about' value='About' />
                 </div>
                 <TextInput id='about' placeholder='Cant talk, whatsapp only' />

@@ -20,4 +20,5 @@ export const userLogs = (req, res, next) => {
     console.log(err);
   });
   console.log("User Logs Created Successfully");
+  next();
 };

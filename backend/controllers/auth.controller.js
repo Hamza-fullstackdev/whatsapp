@@ -35,12 +35,12 @@ export const userSignup = async (req, res, next) => {
     const savedUser = await newUser.save();
     if (savedUser) {
       res.send({
-        status: 201,
+        statusCode: 201,
         message: "User created successfully",
       });
     } else {
       res.send({
-        status: 400,
+        statusCode: 400,
         message: "User creation failed",
       });
     }
@@ -70,6 +70,6 @@ export const userLogin = async (req, res, next) => {
   if (user) {
     const token = jwt.sign({ id: user._id }, config.jwtToken);
     const { password: pass, ...rest } = user._doc;
-    res.cookie("access_token", token).status(200).json(rest);
+    res.cookie("access_token", token).status(201).json(rest);
   }
 };

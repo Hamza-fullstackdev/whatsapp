@@ -52,6 +52,7 @@ const Signup = () => {
                   style={{ display: "none" }}
                   ref={fileInputRef}
                   onChange={handleFileChange}
+                  helperText={'Image should be less than 3kb (png, jpg)'}
                 />
               </div>
               <div className='flex flex-row justify-between gap-4 mt-4'>
@@ -75,10 +76,10 @@ const Signup = () => {
                     <Label htmlFor='countries' value='Select your country' />
                   </div>
                   <Select id='countries' required>
-                    <option>Pakistan</option>
-                    <option>India</option>
-                    <option>Usa</option>
-                    <option>Canada</option>
+                    <option value={'Pakistan'}>Pakistan</option>
+                    <option value={'India'}>India</option>
+                    <option value={'United States'}>Usa</option>
+                    <option value={'Canada'}>Canada</option>
                   </Select>
                 </div>
                 <div className='flex-1'>
@@ -95,7 +96,7 @@ const Signup = () => {
               </div>
               <div>
                 <div className='mb-1 mt-2'>
-                  <Label htmlFor='password' value='password' />
+                  <Label htmlFor='password' value='Password' />
                 </div>
                 <TextInput id='password' placeholder='*********' />
               </div>
@@ -119,7 +120,7 @@ const Signup = () => {
               </div>
               <div className='mt-3'>
                 <div className='flex-1'>
-                  <Button style={{ background: "#51A985" }} className='w-full'>
+                  <Button style={{ background: "#51A985" }} className='w-full' type="submit">
                     Register
                   </Button>
                 </div>

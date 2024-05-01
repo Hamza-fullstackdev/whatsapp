@@ -1,11 +1,17 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import { config } from "./utils/config.util.js";
+import mongoose from "mongoose";
 
-dotenv.config();
 const app = express();
-const PORT = config.port || 5000;
+const PORT = config.port || 8000;
+
+mongoose
+  .connect(config.db)
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => console.error(err));
 
 app.use(express.json());
 app.use(

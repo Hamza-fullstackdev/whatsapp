@@ -1,4 +1,4 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import cors from "cors";
 import { config } from "./utils/config.util.js";
 import mongoose from "mongoose";
@@ -14,6 +14,7 @@ mongoose
   .catch((err) => console.error(err));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 app.use(
   cors({
     origin: "http://localhost:5173/",

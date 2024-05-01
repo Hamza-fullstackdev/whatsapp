@@ -20,7 +20,9 @@ app.use(
     credentials: true,
   })
 );
+import authRouter from './routes/auth.route.js';
 
+app.use('/api/auth',authRouter);
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });

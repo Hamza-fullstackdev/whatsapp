@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         required:true
     },
     phone:{
-        type: Number,
+        type: String,
         required:true,
         unique:true
     },
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     profileimg:{
         type:String,
-        required:true,
+        default:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFq_O4Hn8W7WKdakJMSYMpPLi-EhhYpxHIEVcAXBxMvQ&s'
     }
 },{timestamps:true});
 

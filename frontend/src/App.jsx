@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path={"/chat"} element={<Home />} />
           </Route>
-          <Route path={'*'} element={<h1>404 Page</h1>}/>
+          <Route path={'*'} element={<PageNotFound/>}/>
         </Routes>
       </BrowserRouter>
     </>

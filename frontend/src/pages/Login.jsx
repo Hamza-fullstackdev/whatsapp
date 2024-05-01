@@ -42,13 +42,11 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       if (res.ok) {
-        console.log(data);
         dispatch(signInSuccess(data));
-        navigate("/");
+        navigate("/chat");
       }
-      if (data.statusCode === 400) {
+      if (!res.ok) {
         setError(true);
         dispatch(signInFailure(data.message));
       }

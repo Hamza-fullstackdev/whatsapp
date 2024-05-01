@@ -9,13 +9,19 @@ import {
 } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
 
   const handleData = (e) => {
     setFormData({
@@ -26,9 +32,8 @@ const Login = () => {
   console.log(formData);
   const handleFormData = async (e) => {
     e.preventDefault();
-    setError(false);
-    setLoading(true);
     try {
+      dispatch(signInStart());
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -37,16 +42,18 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setLoading(false);
-      if (data.statusCode === 201) {
+      console.log(data);
+      if (res.ok) {
+        console.log(data);
+        dispatch(signInSuccess(data));
         navigate("/");
       }
       if (data.statusCode === 400) {
         setError(true);
-        setErrorMessage(data.message);
+        dispatch(signInFailure(data.message));
       }
     } catch (error) {
-      console.log(error);
+      dispatch(signInFailure(error.message));
     }
   };
 

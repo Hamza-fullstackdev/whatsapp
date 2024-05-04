@@ -6,7 +6,7 @@ export const getAllUsers= async(req,res,next)=>{
         if(!users) return next(errorHandler(400,"User not found"));
         res.status(200).json({
             success:true,
-            data:users
+            users:users
         })
     }catch(error){
         next(error);

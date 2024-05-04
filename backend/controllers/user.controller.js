@@ -16,3 +16,20 @@ export const getAllUsers= async(req,res,next)=>{
         return next(errorHandler(400,"you are not authorized to access this page"));
     }
 }
+
+export const getSingleUser= async(req,res,next)=>{
+    if(req.user.id){
+        try{
+            const user=await User.findById(req.params.id);
+            if(!user) return next(errorHandler(400,"User not found"));
+            res.status(200).json({
+                success:true,
+                user:user
+            })
+        }catch(error){
+            next(error);
+        }
+    }else{
+        return next(errorHandler(400,"you are not authorized to access this page"));
+    }
+}

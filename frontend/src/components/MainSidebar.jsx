@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 const MainSidebar = () => {
   const [usersData, setUsersData] = useState([]);
-  const [tab, setTab] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     getAllusers();

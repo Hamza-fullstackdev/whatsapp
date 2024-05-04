@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, TextInput } from "flowbite-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoSearch } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 const MainChats = () => {
-  const [showWelcome, setShowWelcome] = useState(false);
+  const location = useLocation();
+  const [tab,setTab]=useState('');
+   useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tabFromUrl = urlParams.get("chat");
+    if (tabFromUrl) {
+      setTab(tabFromUrl);
+    }
+  }, [location.search]);
+  console.log(tab)
   return (
     <>
-      {showWelcome && (
+      {tab==='' ? (
         <div
           className='w-full flex justify-center items-center'
           style={{ height: "100vh", background: "rgb(227 232 236 / 15%)" }}
@@ -19,9 +29,8 @@ const MainChats = () => {
             <p>Hi Hamza, Welcome From The Developer Of This Chat Application</p>
           </div>
         </div>
-      )}
-
-      <div
+      ):(
+        <div
         className='w-full overflow-auto'
         style={{ height: "100vh", background: "#E7DFDC" }}
       >
@@ -196,6 +205,7 @@ const MainChats = () => {
           </div>
         </div>
       </div>
+      )}
     </>
   );
 };

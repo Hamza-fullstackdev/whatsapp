@@ -11,7 +11,7 @@ const MainSidebar = () => {
     <div style={{minWidth: "320px", height: "100vh",borderRight: '1px solid #80808026', overflow: 'auto' }}>
       <div
         className='flex flex-row items-center justify-between'
-        style={{ background: "#E3E8EC", padding: "8px 15px" }}
+        style={{ background: "#EEEEEE", padding: "8px 15px" }}
       >
         <div>
           <Avatar

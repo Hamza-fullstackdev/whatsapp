@@ -1,11 +1,11 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import cors from "cors";
 import { config } from "./utils/config.util.js";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = config.port || 8000;
-
 mongoose
   .connect(config.db)
   .then(() => {
@@ -14,7 +14,7 @@ mongoose
   .catch((err) => console.error(err));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173/",

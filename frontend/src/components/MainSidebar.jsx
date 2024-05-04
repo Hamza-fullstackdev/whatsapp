@@ -13,7 +13,7 @@ const MainSidebar = () => {
     getAllusers();
   }, []);
 
-   const getAllusers = async () => {
+  const getAllusers = async () => {
     try {
       const res = await fetch("api/user/all-users");
       const data = await res.json();
@@ -36,7 +36,9 @@ const MainSidebar = () => {
         style={{ background: "#EEEEEE", padding: "8px 15px" }}
       >
         <div>
-          <Avatar img={currentUser.profileimg} rounded></Avatar>
+          <Link to={`/profile/${currentUser._id}`}>
+            <Avatar img={currentUser.profileimg} rounded></Avatar>
+          </Link>
         </div>
         <div className='flex items-center'>
           <Link style={{ marginRight: "35px" }}>
@@ -59,7 +61,11 @@ const MainSidebar = () => {
       </div>
       <div>
         {usersData.map((item) => (
-          <Link key={item._id} to={`/chat?chat=${item._id}`} className="cursor-default">
+          <Link
+            key={item._id}
+            to={`/chat?chat=${item._id}`}
+            className='cursor-default'
+          >
             <div
               className='flex flex-row items-start justify-between px-3 py-2'
               style={{ background: "white", borderTop: "1px solid #80808026" }}

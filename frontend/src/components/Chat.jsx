@@ -170,7 +170,7 @@ const Chat = (props) => {
           <MdOutlineEmojiEmotions className='text-lg' />
         </div>
         <div className='w-full'>
-          <TextInput />
+          <TextInput placeholder="What's on your mind?"/>
         </div>
         <div className='ml-3'>
           <IoSend />

@@ -15,7 +15,6 @@ const MainChats = () => {
   }
   }, [location.search,tab]);
 
-
   useEffect(()=>{
     if(tab){
       getSingleUser();
@@ -30,7 +29,8 @@ const MainChats = () => {
       console.log(error);
     }
   };
-  return <>{tab == null ? <Welcome /> : <Chat apiData={userData}/>}</>;
+  return <>{tab == null ? <Welcome /> : <Chat apiData={userData}/>}
+  </>;
 };
 
 export default MainChats;

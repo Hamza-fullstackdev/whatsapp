@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -15,8 +16,9 @@ function App() {
           <Route path={"/login"} element={<Login />} />
           <Route element={<ProtectedRoutes />}>
             <Route path={"/chat"} element={<Home />} />
+            <Route path={"/profile/:id"} element={<Profile />} />
           </Route>
-          <Route path={'*'} element={<PageNotFound/>}/>
+          <Route path={"*"} element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </>

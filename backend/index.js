@@ -22,8 +22,10 @@ app.use(
   })
 );
 import authRouter from './routes/auth.route.js';
+import userRoute from './routes/user.route.js';
 
 app.use('/api/auth',authRouter);
+app.use('/api/user',userRoute);
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });

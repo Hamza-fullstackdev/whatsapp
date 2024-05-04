@@ -56,7 +56,7 @@ const MainChats = () => {
             </div>
           </div>
         </div>
-        <div style={{ padding: "0 90px" }}>
+        <div style={{ padding: "0 90px", marginTop:'70px' }}>
           <div className='mx-auto w-max mt-3'>
             <h3 className='bg-white py-1 px-3 text-sm rounded-md'>Today</h3>
           </div>

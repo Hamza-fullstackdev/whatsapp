@@ -25,6 +25,10 @@ const ProfileSidebar = () => {
         <div className="mt-4">
           <div className='flex flex-row items-center justify-center border border-black p-2 cursor-pointer mt-2'>
             <MdOutlinePermMedia className='text-white' />
+            <h3 className='ml-3 text-white text-sm'>Enable Dark Mode</h3>
+          </div>
+          <div className='flex flex-row items-center justify-center border border-black p-2 cursor-pointer mt-2'>
+            <MdOutlinePermMedia className='text-white' />
             <h3 className='ml-3 text-white text-sm'>Media, Files and Links</h3>
           </div>
           <div className='flex flex-row items-center justify-center border border-black p-2 cursor-pointer mt-2'>

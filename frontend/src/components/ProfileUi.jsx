@@ -4,14 +4,22 @@ import { FaRegUser } from "react-icons/fa6";
 import { FaPen } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoArrowBackSharp } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateFailure,
+  updateStart,
+  updateSuccess,
+} from "../redux/user/userSlice";
 
 const ProfileUi = (props) => {
   const currentUser = props.currentUser;
   const [formData, setFormData] = useState({});
-  const [error,setError]= useState(false);
-  const [loading,setLoading] = useState(false);
-  const [success,setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(null);
+  const { error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleSubmit = (e) => {
     setFormData({
       ...formData,
@@ -21,7 +29,7 @@ const ProfileUi = (props) => {
   const handleFormData = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(updateStart());
       const res = await fetch(`/api/user/update-user/${currentUser._id}`, {
         method: "POST",
         headers: {
@@ -30,17 +38,17 @@ const ProfileUi = (props) => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setLoading(false);
-      if(res.ok){
+      if (res.ok) {
         setSuccess(true);
-        setErrorMessage("Profile Updated Successfully!");
+        setShowSuccessMessage("Profile Updated Successfully");
+        dispatch(updateSuccess(data));
       }
-      if(!res.ok){
-        setError(true);
-        setErrorMessage(data.message);
+      if (!res.ok) {
+        setSuccess(false);
+        dispatch(updateFailure(data.message));
       }
     } catch (error) {
-      console.log(error);
+      dispatch(updateFailure(error.message));
     }
   };
   return (
@@ -59,8 +67,8 @@ const ProfileUi = (props) => {
         Your Profile
       </h2>
       <form style={{ width: "400px" }} onSubmit={handleFormData}>
-        {error && <Alert color={'failure'}>{errorMessage}</Alert>}
-        {success && <Alert color={'success'}>{errorMessage}</Alert>}
+        {error && <Alert color={"failure"}>{error}</Alert>}
+        {success && <Alert color={"success"}>{showSuccessMessage}</Alert>}
         <div>
           <Avatar size={"xl"} rounded img={currentUser.profileimg}></Avatar>
         </div>
@@ -106,7 +114,9 @@ const ProfileUi = (props) => {
           />
         </div>
         <div className='mt-2 flex flex-col'>
-          <Button style={{ background: "#51A985" }} type="submit">Update</Button>
+          <Button style={{ background: "#51A985" }} type='submit'>
+            Update
+          </Button>
         </div>
       </form>
     </div>

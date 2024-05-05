@@ -6,7 +6,6 @@ import { useLocation, useParams } from "react-router-dom";
 const Profile = () => {
   const params = useParams()
   const [user,setUser]= useState([])
-  console.log(params)
   useEffect(()=>{
     const getSingleUser= async ()=>{
       try {

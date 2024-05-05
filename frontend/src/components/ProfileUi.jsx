@@ -16,7 +16,7 @@ const ProfileUi = (props) => {
   const [formData, setFormData] = useState({});
   const [success, setSuccess] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(null);
-  const { error } = useSelector((state) => state.user);
+  const { error, currentUser: current } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     setFormData({
@@ -62,7 +62,7 @@ const ProfileUi = (props) => {
         <span className='mr-2'>
           <IoArrowBackSharp />
         </span>{" "}
-        Your Profile
+        {currentUser._id !== current._id? `${currentUser.fname}'s`:"Your"} Profile
       </h2>
       <form style={{ width: "400px" }} onSubmit={handleFormData}>
         {error && <Alert color={"failure"}>{error}</Alert>}
@@ -77,6 +77,7 @@ const ProfileUi = (props) => {
             defaultValue={currentUser.fname}
             onChange={handleSubmit}
             id='fname'
+            readOnly={currentUser._id !== current._id ? true : false}
           />
         </div>
         <div className='mt-2'>
@@ -86,6 +87,7 @@ const ProfileUi = (props) => {
             defaultValue={currentUser.lname}
             onChange={handleSubmit}
             id='lname'
+            readOnly={currentUser._id !== current._id ? true : false}
           />
         </div>
         <div className='mt-2'>
@@ -95,6 +97,7 @@ const ProfileUi = (props) => {
             defaultValue={currentUser.about}
             onChange={handleSubmit}
             id='about'
+            readOnly={currentUser._id !== current._id ? true : false}
           />
         </div>
         <div className='mt-2'>
@@ -105,12 +108,17 @@ const ProfileUi = (props) => {
             defaultValue={currentUser.phone}
             onChange={handleSubmit}
             id='phone'
+            readOnly={currentUser._id !== current._id ? true : false}
           />
         </div>
         <div className='mt-2 flex flex-col'>
-          <Button style={{ background: "#51A985" }} type='submit'>
-            Update
-          </Button>
+          {
+            currentUser._id === current._id && (
+              <Button style={{ background: "#51A985" }} type='submit'>
+                Update
+              </Button>
+            )
+          }
         </div>
       </form>
     </div>

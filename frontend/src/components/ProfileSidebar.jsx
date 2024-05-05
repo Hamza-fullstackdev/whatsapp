@@ -11,7 +11,7 @@ const ProfileSidebar = (props) => {
   return (
     <div
       className='w-[300px] min-h-screen'
-      style={{ background: "#51A985", minWidth: "320px", height: "100vh" }}
+      style={{ background: `${theme==="light"?"#51A985":'rgb(42,65,81,1)'}`,borderRight:`1px solid ${theme==="light"?'#51A985':'#51A985'}`, minWidth: "320px", height: "100vh" }}
     >
       <div style={{ marginTop: "20px", padding: "0 20px" }}>
         <div>

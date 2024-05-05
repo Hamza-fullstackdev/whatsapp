@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 const MainSidebar = () => {
   const [usersData, setUsersData] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
   useEffect(() => {
     getAllusers();
   }, []);
@@ -32,9 +33,9 @@ const MainSidebar = () => {
       }}
     >
       <div
-        className='flex flex-row items-center justify-between'
-        style={{ background: "#EEEEEE", padding: "8px 15px" }}
-      >
+        className='flex flex-row items-center justify-between dark:text-white'
+        style={{ background: `${theme==="light"?'#EEEEEE':'rgb(42,65,81,1)'}`, padding: "8px 15px" }}
+        >
         <div>
           <Link to={`/profile/${currentUser._id}`}>
             <Avatar img={currentUser.profileimg} rounded></Avatar>
@@ -56,7 +57,7 @@ const MainSidebar = () => {
           className='py-1'
           icon={CiSearch}
           placeholder='Search or start a new chat'
-          style={{ borderRadius: 0, background: "white", border: "none" }}
+          style={{ borderRadius: 0, background: `${theme==="light"?'white':'rgb(42,65,81,1)'}`, border: "none" }}
         />
       </div>
       <div>
@@ -68,7 +69,7 @@ const MainSidebar = () => {
           >
             <div
               className='flex flex-row items-start justify-between px-3 py-2'
-              style={{ background: "white", borderTop: "1px solid #80808026" }}
+              style={{ background: `${theme==="light"?'white':'rgb(42,65,81,1)'}`, borderTop: `1px solid ${theme==="light"?'#80808026':"white"}` }}
             >
               <div className='w-fit'>
                 <Avatar img={item.profileimg} rounded></Avatar>
@@ -80,7 +81,7 @@ const MainSidebar = () => {
                 <p className='text-sm'>Hamza is a good boy</p>
               </div>
               <div className='w-fit'>
-                <span className='text-sm' style={{ color: "#0000008a" }}>
+                <span className='text-sm' style={{ color: `${theme==="light"?'#0000008a':'white'}` }}>
                   12:40
                 </span>
               </div>

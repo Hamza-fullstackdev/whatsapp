@@ -70,3 +70,23 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const searchUsers = async (req, res, next) => {
+  if (req.user.id) {
+    const { query } = req.query;
+
+    try {
+      const users = await User.find({
+        $or: [
+          { fname: { $regex: query, $options: "i" } },
+          { lname: { $regex: query, $options: "i" } },
+          { phone: { $regex: query, $options: "i" } },
+        ],
+      });
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+};

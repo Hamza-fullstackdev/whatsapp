@@ -24,6 +24,8 @@ const MainSidebar = () => {
       console.log(error);
     }
   };
+  const filterUsers = usersData.filter((user) => user._id !== currentUser._id);
+  console.log(filterUsers);
   return (
     <div
       style={{
@@ -64,7 +66,7 @@ const MainSidebar = () => {
               {theme === "light" ? "Dark Mode" : "Light Mode"}
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item>Profile</Dropdown.Item>
+            <Dropdown.Item><Link to={`/profile/${currentUser._id}`}>Profile</Link></Dropdown.Item>
             <Dropdown.Divider />
           </Dropdown>
         </div>
@@ -82,7 +84,7 @@ const MainSidebar = () => {
         />
       </div>
       <div>
-        {usersData.map((item) => (
+        {filterUsers.map((item) => (
           <Link
             key={item._id}
             to={`/chat?chat=${item._id}`}

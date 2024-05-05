@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, TextInput } from "flowbite-react";
+import { Avatar, Dropdown, TextInput } from "flowbite-react";
 import { BsChatLeftTextFill } from "react-icons/bs";
 import { SlOptionsVertical } from "react-icons/sl";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
 const MainSidebar = () => {
   const [usersData, setUsersData] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const dispatch = useDispatch();
   useEffect(() => {
     getAllusers();
   }, []);
@@ -34,8 +35,11 @@ const MainSidebar = () => {
     >
       <div
         className='flex flex-row items-center justify-between dark:text-white'
-        style={{ background: `${theme==="light"?'#EEEEEE':'rgb(42,65,81,1)'}`, padding: "8px 15px" }}
-        >
+        style={{
+          background: `${theme === "light" ? "#EEEEEE" : "rgb(42,65,81,1)"}`,
+          padding: "8px 15px",
+        }}
+      >
         <div>
           <Link to={`/profile/${currentUser._id}`}>
             <Avatar img={currentUser.profileimg} rounded></Avatar>
@@ -46,10 +50,23 @@ const MainSidebar = () => {
             {" "}
             <BsChatLeftTextFill />
           </Link>
-          <Link>
-            {" "}
-            <SlOptionsVertical />
-          </Link>
+          <Dropdown inline arrowIcon={false} label={<SlOptionsVertical />}>
+            <Dropdown.Header>
+              <h3 className='font-semibold'>
+                {currentUser.fname} {currentUser.lname}
+              </h3>
+              <p className='text-sm'>
+                {currentUser.country === "Pakistan" ? "+92" : ""}{" "}
+                {currentUser.phone}
+              </p>
+            </Dropdown.Header>
+            <Dropdown.Item onClick={() => dispatch(toggleTheme())}>
+              {theme === "light" ? "Dark Mode" : "Light Mode"}
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item>Profile</Dropdown.Item>
+            <Dropdown.Divider />
+          </Dropdown>
         </div>
       </div>
       <div>
@@ -57,7 +74,11 @@ const MainSidebar = () => {
           className='py-1'
           icon={CiSearch}
           placeholder='Search or start a new chat'
-          style={{ borderRadius: 0, background: `${theme==="light"?'white':'rgb(42,65,81,1)'}`, border: "none" }}
+          style={{
+            borderRadius: 0,
+            background: `${theme === "light" ? "white" : "rgb(42,65,81,1)"}`,
+            border: "none",
+          }}
         />
       </div>
       <div>
@@ -69,7 +90,14 @@ const MainSidebar = () => {
           >
             <div
               className='flex flex-row items-start justify-between px-3 py-2'
-              style={{ background: `${theme==="light"?'white':'rgb(42,65,81,1)'}`, borderTop: `1px solid ${theme==="light"?'#80808026':"white"}` }}
+              style={{
+                background: `${
+                  theme === "light" ? "white" : "rgb(42,65,81,1)"
+                }`,
+                borderTop: `1px solid ${
+                  theme === "light" ? "#80808026" : "white"
+                }`,
+              }}
             >
               <div className='w-fit'>
                 <Avatar img={item.profileimg} rounded></Avatar>
@@ -81,7 +109,12 @@ const MainSidebar = () => {
                 <p className='text-sm'>Hamza is a good boy</p>
               </div>
               <div className='w-fit'>
-                <span className='text-sm' style={{ color: `${theme==="light"?'#0000008a':'white'}` }}>
+                <span
+                  className='text-sm'
+                  style={{
+                    color: `${theme === "light" ? "#0000008a" : "white"}`,
+                  }}
+                >
                   12:40
                 </span>
               </div>

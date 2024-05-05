@@ -5,6 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
   const data = props.apiData;
@@ -26,15 +27,17 @@ const Chat = (props) => {
           width: "-webkit-fill-available",
         }}
       >
-        <div className='flex flex-row items-center'>
-          <Avatar img={data.profileimg} rounded></Avatar>
-          <div className='ml-3'>
-            <h3 className='font-semibold'>
-              {data.fname} {data.lname}
-            </h3>
-            <span className='text-sm'>Online</span>
+        <Link to={`/profile/${data._id}`}>
+          <div className='flex flex-row items-center'>
+            <Avatar img={data.profileimg} rounded></Avatar>
+            <div className='ml-3'>
+              <h3 className='font-semibold'>
+                {data.fname} {data.lname}
+              </h3>
+              <span className='text-sm'>Online</span>
+            </div>
           </div>
-        </div>
+        </Link>
         <div className='flex flex-row items-center'>
           <div style={{ marginRight: "30px" }}>
             <IoSearch />
@@ -82,7 +85,7 @@ const Chat = (props) => {
       <div
         className='flex flex-row items-center justify-between px-5 py-2'
         style={{
-          background: `${theme==="light"?'#EBE9E7':'rgb(42,65,81,1)'}`,
+          background: `${theme === "light" ? "#EBE9E7" : "rgb(42,65,81,1)"}`,
           position: "absolute",
           bottom: "0",
           width: "-webkit-fill-available",

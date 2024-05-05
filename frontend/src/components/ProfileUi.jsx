@@ -71,9 +71,7 @@ const ProfileUi = (props) => {
           <Avatar size={"xl"} rounded img={currentUser.profileimg}></Avatar>
         </div>
         <div className='mt-2'>
-          <Label style={{ color: "#51A985", fontSize: "16px" }}>
-            First Name:
-          </Label>
+          <Label style={{ color: "#51A985" }}>First Name:</Label>
           <TextInput
             icon={FaRegUser}
             defaultValue={currentUser.fname}
@@ -82,9 +80,7 @@ const ProfileUi = (props) => {
           />
         </div>
         <div className='mt-2'>
-          <Label style={{ color: "#51A985", fontSize: "16px" }}>
-            Last Name:
-          </Label>
+          <Label style={{ color: "#51A985" }}>Last Name:</Label>
           <TextInput
             icon={FaRegUser}
             defaultValue={currentUser.lname}
@@ -93,7 +89,7 @@ const ProfileUi = (props) => {
           />
         </div>
         <div className='mt-2'>
-          <Label style={{ color: "#51A985", fontSize: "16px" }}>About:</Label>
+          <Label style={{ color: "#51A985" }}>About:</Label>
           <TextInput
             icon={FaPen}
             defaultValue={currentUser.about}
@@ -102,7 +98,7 @@ const ProfileUi = (props) => {
           />
         </div>
         <div className='mt-2'>
-          <Label style={{ color: "#51A985", fontSize: "16px" }}>Phone:</Label>
+          <Label style={{ color: "#51A985" }}>Phone:</Label>
           <TextInput
             icon={FaPhoneAlt}
             type='tel'

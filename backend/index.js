@@ -21,11 +21,13 @@ app.use(
     credentials: true,
   })
 );
-import authRouter from './routes/auth.route.js';
-import userRoute from './routes/user.route.js';
+import authRouter from "./routes/auth.route.js";
+import userRoute from "./routes/user.route.js";
+import messagesRouter from "./routes/messages.route.js";
 
-app.use('/api/auth',authRouter);
-app.use('/api/user',userRoute);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRoute);
+app.use("/api/messages", messagesRouter);
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });

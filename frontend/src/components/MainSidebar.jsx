@@ -3,9 +3,10 @@ import { Avatar, Dropdown, TextInput } from "flowbite-react";
 import { BsChatLeftTextFill } from "react-icons/bs";
 import { SlOptionsVertical } from "react-icons/sl";
 import { CiSearch } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { logoutFailure, logoutSuccess } from "../redux/user/userSlice";
 const MainSidebar = () => {
   const [usersData, setUsersData] = useState([]);
   const [query, setQuery] = useState("");
@@ -13,6 +14,7 @@ const MainSidebar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const navigate= useNavigate();
   useEffect(() => {
     getAllusers();
   }, []);
@@ -39,11 +41,27 @@ const MainSidebar = () => {
       console.log(error);
     }
   };
+  const handleLogout=async()=>{
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if(res.ok){
+        dispatch(logoutSuccess());
+        navigate('/login');
+      }
+    } catch (error) {
+      dispatch(logoutFailure(error.message));
+    }
+  }
   const filterUsers = usersData.filter((user) => user._id !== currentUser._id);
   const searchFilter = searchUser.filter(
     (user) => user._id !== currentUser._id
   );
-  console.log(searchUser);
   return (
     <div
       className='shadow-md'
@@ -81,14 +99,15 @@ const MainSidebar = () => {
                 {currentUser.phone}
               </p>
             </Dropdown.Header>
-            <Dropdown.Item onClick={() => dispatch(toggleTheme())}>
-              {theme === "light" ? "Dark Mode" : "Light Mode"}
-            </Dropdown.Item>
-            <Dropdown.Divider />
             <Dropdown.Item>
               <Link to={`/profile/${currentUser._id}`}>Profile</Link>
             </Dropdown.Item>
             <Dropdown.Divider />
+            <Dropdown.Item onClick={() => dispatch(toggleTheme())}>
+              {theme === "light" ? "Dark Mode" : "Light Mode"}
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
           </Dropdown>
         </div>
       </div>

@@ -38,3 +38,35 @@ export const getSingleUser = async (req, res, next) => {
     );
   }
 };
+
+export const updateUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(
+      errorHandler(403, "You are not authorized to update this user")
+    );
+  }
+  if (req.body.password) {
+    if (req.body.password < 8) {
+      return next(errorHandler(403, "Password should be atleast 8 characters"));
+    }
+    req.body.password = bcrypt.hashSync(req.body.password, 10);
+  }
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          fname: req.body.fname,
+          lname: req.body.lname,
+          phone: req.body.phone,
+          profileimg: req.body.profileimg,
+        },
+      },
+      { new: true }
+    );
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};

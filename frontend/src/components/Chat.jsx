@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, TextInput } from "flowbite-react";
+import { Avatar, Button, TextInput } from "flowbite-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoSearch } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
@@ -8,7 +8,29 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
+  const [message, setMessage] = useState("");
   const data = props.apiData;
+
+  const sendMessage = async () => {
+    try {
+      const res = await fetch(`/api/messages/send/${data._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        console.log(result);
+        setMessage('')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div
       className='w-full overflow-auto'
@@ -95,9 +117,13 @@ const Chat = (props) => {
           <MdOutlineEmojiEmotions className='text-lg' />
         </div>
         <div className='w-full'>
-          <TextInput placeholder="What's on your mind?" />
+          <TextInput
+            placeholder="What's on your mind?"
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+          />
         </div>
-        <div className='ml-3'>
+        <div className='ml-3' onClick={sendMessage}>
           <IoSend />
         </div>
       </div>

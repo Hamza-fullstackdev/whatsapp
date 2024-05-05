@@ -9,17 +9,17 @@ const MainChats = () => {
   const [userData, setUserData] = useState([]);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-  const tabFromUrl = urlParams.get("chat");
-  if (tabFromUrl !== tab) {
-    setTab(tabFromUrl);
-  }
-  }, [location.search,tab]);
+    const tabFromUrl = urlParams.get("chat");
+    if (tabFromUrl !== tab) {
+      setTab(tabFromUrl);
+    }
+  }, [location.search, tab]);
 
-  useEffect(()=>{
-    if(tab){
+  useEffect(() => {
+    if (tab) {
       getSingleUser();
     }
-  },[tab])
+  }, [tab]);
   const getSingleUser = async () => {
     try {
       const res = await fetch(`/api/user/single-user/${tab}`);
@@ -29,8 +29,7 @@ const MainChats = () => {
       console.log(error);
     }
   };
-  return <>{tab == null ? <Welcome /> : <Chat apiData={userData}/>}
-  </>;
+  return <>{tab == null ? <Welcome /> : <Chat apiData={userData} />}</>;
 };
 
 export default MainChats;

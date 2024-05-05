@@ -14,8 +14,6 @@ import {
 const ProfileUi = (props) => {
   const currentUser = props.currentUser;
   const [formData, setFormData] = useState({});
-  const [showError, setShowError] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(null);
   const { error } = useSelector((state) => state.user);

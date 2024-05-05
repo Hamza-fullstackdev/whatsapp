@@ -116,7 +116,7 @@ const ProfileSidebar = (props) => {
               }}
               onClick={handleLogout}
             >
-              Signout
+              Logout
             </Button>
           </div>
           <Modal

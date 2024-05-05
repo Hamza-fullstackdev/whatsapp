@@ -41,7 +41,6 @@ const Signup = () => {
       [e.target.id]: e.target.value,
     });
   };
-  console.log(formData);
   const handleFormData = async (e) => {
     setError(false);
     setLoading(true);

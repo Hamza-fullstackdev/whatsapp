@@ -1,33 +1,60 @@
-import React from "react";
-import { Avatar, Button } from "flowbite-react";
+import React, { useState } from "react";
+import { Avatar, Button, Modal } from "flowbite-react";
 import { MdOutlinePermMedia } from "react-icons/md";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
-import { logoutFailure, logoutSuccess } from "../redux/user/userSlice";
+import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  logoutFailure,
+  logoutSuccess,
+} from "../redux/user/userSlice";
 
 const ProfileSidebar = (props) => {
   const { theme } = useSelector((state) => state.theme);
   const { currentUser: current } = useSelector((state) => state.user);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const currentUser = props.currentUser;
 
-  const handleLogout=async()=>{
+  const handleLogout = async () => {
     try {
-      const res= await fetch('/api/auth/logout',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json'
-        }
-      })
-      const data = await res.json();
-      if(res.ok){
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      await res.json();
+      if (res.ok) {
         dispatch(logoutSuccess());
-        navigate('/login');
+        navigate("/login");
       }
     } catch (error) {
       dispatch(logoutFailure(error.message));
     }
-  }
+  };
+
+  const handleDeleteUser = async () => {
+    dispatch(deleteUserStart());
+    try {
+      const res = await fetch(`/api/auth/delete/${currentUser._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data=await res.json();
+      if (res.ok) {
+        dispatch(deleteUserSuccess(data));
+        navigate("/login");
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
   return (
     <div
       className='w-[300px] min-h-screen'
@@ -81,10 +108,48 @@ const ProfileSidebar = (props) => {
             <h3 className='ml-3 text-white text-sm'>Media Visibility</h3>
           </div>
           <div className='flex flex-col mt-3'>
-            <Button style={{ color: "red", background:'transparent', border:'1px solid red' }} onClick={handleLogout}>Signout</Button>
+            <Button
+              style={{
+                color: "red",
+                background: "transparent",
+                border: "1px solid red",
+              }}
+              onClick={handleLogout}
+            >
+              Signout
+            </Button>
           </div>
+          <Modal
+            show={showModal}
+            popup
+            size={"md"}
+            onClose={() => setShowModal(false)}
+          >
+            <Modal.Header />
+            <Modal.Body>
+              <div className='text-center'>
+                <HiOutlineExclamationCircle className='mx-auto text-gray-400 dark:text-gray-200 mb-4' />
+                <h3 className='mb-5 text-lg text-gray-600 dark:text-gray-400'>
+                  Are you sure you want to delete your account?
+                </h3>
+                <div className='flex flex-row justify-center gap-4'>
+                  <Button color='failure' onClick={handleDeleteUser}>
+                    Confirm
+                  </Button>
+                  <Button color='gray' onClick={() => setShowModal(false)}>
+                    No, Cancel
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
           <div className='flex flex-col mt-3'>
-            <Button style={{ background: "red" }} >Delete Account</Button>
+            <Button
+              style={{ background: "red" }}
+              onClick={() => setShowModal(true)}
+            >
+              Delete Account
+            </Button>
           </div>
         </div>
       </div>

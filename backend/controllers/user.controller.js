@@ -83,7 +83,10 @@ export const searchUsers = async (req, res, next) => {
           { phone: { $regex: query, $options: "i" } },
         ],
       });
-      res.json(users);
+      res.send({
+        success: true,
+        users: users,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Server error" });

@@ -81,7 +81,10 @@ const ProfileSidebar = (props) => {
             <h3 className='ml-3 text-white text-sm'>Media Visibility</h3>
           </div>
           <div className='flex flex-col mt-3'>
-            <Button style={{ background: "red" }} onClick={handleLogout}>Signout</Button>
+            <Button style={{ color: "red", background:'transparent', border:'1px solid red' }} onClick={handleLogout}>Signout</Button>
+          </div>
+          <div className='flex flex-col mt-3'>
+            <Button style={{ background: "red" }} >Delete Account</Button>
           </div>
         </div>
       </div>

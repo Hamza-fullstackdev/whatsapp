@@ -18,7 +18,7 @@ const Chat = (props) => {
       }}
     >
       <div
-        className='flex flex-row items-center justify-between relative'
+        className='flex flex-row items-center justify-between relative shadow-md'
         style={{
           background: `${theme === "light" ? "#EEEEEE" : "rgb(42,65,81,1)"}`,
           padding: "4px 20px",

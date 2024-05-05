@@ -73,3 +73,12 @@ export const userLogin = async (req, res, next) => {
     res.cookie("access_token", token).status(201).json(rest);
   }
 };
+
+export const userLogOut = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("User account has been deleted successfully");
+  } catch (error) {
+    next(error);
+  }
+};

@@ -40,9 +40,13 @@ const MainSidebar = () => {
     }
   };
   const filterUsers = usersData.filter((user) => user._id !== currentUser._id);
+  const searchFilter = searchUser.filter(
+    (user) => user._id !== currentUser._id
+  );
   console.log(searchUser);
   return (
     <div
+      className='shadow-md'
       style={{
         minWidth: "320px",
         height: "100vh",
@@ -102,8 +106,8 @@ const MainSidebar = () => {
         />
       </div>
       <div>
-        {searchUser.length > 0
-          ? searchUser.map((item) => {
+        {searchFilter.length > 0
+          ? searchFilter.map((item) => {
               return (
                 <Link
                   key={item._id}

@@ -2,7 +2,8 @@ import React from "react";
 import { Avatar } from "flowbite-react";
 import { MdOutlinePermMedia } from "react-icons/md";
 
-const ProfileSidebar = () => {
+const ProfileSidebar = (props) => {
+  const currentUser= props.currentUser;
   return (
     <div
       className='w-[300px] min-h-screen'
@@ -14,13 +15,13 @@ const ProfileSidebar = () => {
             size={"xl"}
             rounded
             img={
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFq_O4Hn8W7WKdakJMSYMpPLi-EhhYpxHIEVcAXBxMvQ&s"
+             currentUser.profileimg
             }
           ></Avatar>
         </div>
         <div className="text-center text-white mt-2">
-            <h3 className="text-xl">Hamza Ilyas</h3>
-            <p className="text-sm">+92 3150706126</p>
+            <h3 className="text-xl">{currentUser.fname} {currentUser.lname}</h3>
+            <p className="text-sm">{currentUser.country==="Pakistan"?'+92': "+231"} {currentUser.phone}</p>
         </div>
         <div className="mt-4">
           <div className='flex flex-row items-center justify-center border border-black p-2 cursor-pointer mt-2'>

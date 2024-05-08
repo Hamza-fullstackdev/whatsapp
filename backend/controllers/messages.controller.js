@@ -28,3 +28,20 @@ export const sendMessage = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const getMessages=async(req,res,next)=>{
+  try {
+    const {id:userToChat}=req.params;
+    const {id:senderId}=req.user;
+    const conversations= await Conservation.findOne({
+      participants:{$all:[senderId,userToChat]}
+    }).populate('messages');
+
+    if(!conversations) return res.status(200).json([]);
+    const messages= conversations.messages;
+    res.status(200).json(messages);
+  } catch (error) {
+    next(error);
+  }
+}

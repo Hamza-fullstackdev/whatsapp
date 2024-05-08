@@ -46,7 +46,7 @@ const ProfileSidebar = (props) => {
           "Content-Type": "application/json",
         },
       });
-      const data=await res.json();
+      const data = await res.json();
       if (res.ok) {
         dispatch(deleteUserSuccess(data));
         navigate("/login");
@@ -107,18 +107,22 @@ const ProfileSidebar = (props) => {
             <MdOutlinePermMedia className='text-white' />
             <h3 className='ml-3 text-white text-sm'>Media Visibility</h3>
           </div>
-          <div className='flex flex-col mt-3'>
-            <Button
-              style={{
-                color: "red",
-                background: "transparent",
-                border: "1px solid red",
-              }}
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
-          </div>
+          {currentUser._id === current._id ? (
+            <div className='flex flex-col mt-3'>
+              <Button
+                style={{
+                  color: "red",
+                  background: "transparent",
+                  border: "1px solid red",
+                }}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
           <Modal
             show={showModal}
             popup
@@ -143,14 +147,18 @@ const ProfileSidebar = (props) => {
               </div>
             </Modal.Body>
           </Modal>
-          <div className='flex flex-col mt-3'>
-            <Button
-              style={{ background: "red" }}
-              onClick={() => setShowModal(true)}
-            >
-              Delete Account
-            </Button>
-          </div>
+          {currentUser._id === current._id ? (
+            <div className='flex flex-col mt-3'>
+              <Button
+                style={{ background: "red" }}
+                onClick={() => setShowModal(true)}
+              >
+                Delete Account
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

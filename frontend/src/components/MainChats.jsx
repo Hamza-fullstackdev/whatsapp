@@ -29,7 +29,7 @@ const MainChats = () => {
       console.log(error);
     }
   };
-  return <>{tab == null ? <Welcome /> : <Chat apiData={userData} />}</>;
+  return <>{tab == null ? <Welcome /> : <Chat apiData={userData} tab={tab}/>}</>;
 };
 
 export default MainChats;

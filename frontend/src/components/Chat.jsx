@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, TextInput } from "flowbite-react";
+import { Avatar, TextInput } from "flowbite-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoSearch } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
@@ -9,8 +9,24 @@ import { Link } from "react-router-dom";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
   const [message, setMessage] = useState("");
+  const [getMessages, setGetMessage] = useState([]);
   const data = props.apiData;
+  const tab = props.tab;
 
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await fetch(`/api/messages/get/${tab}`);
+        const result = await res.json();
+        if (res.ok) {
+          setGetMessage(result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMessages();
+  }, [tab, message]);
   const sendMessage = async () => {
     try {
       const res = await fetch(`/api/messages/send/${data._id}`, {
@@ -25,7 +41,7 @@ const Chat = (props) => {
       const result = await res.json();
       if (res.ok) {
         console.log(result);
-        setMessage('')
+        setMessage("");
       }
     } catch (error) {
       console.log(error);
@@ -69,7 +85,7 @@ const Chat = (props) => {
           </div>
         </div>
       </div>
-      <div style={{ padding: "0 90px", marginTop: "70px" }}>
+      <div style={{ padding: "0 90px", marginTop: "70px", marginBottom:"70px" }}>
         <div className='mx-auto w-max mt-3'>
           <h3
             className='py-1 px-3 text-sm rounded-md'
@@ -81,29 +97,28 @@ const Chat = (props) => {
             Today
           </h3>
         </div>
-        <div className='w-max mt-3'>
-          <p
-            className='py-1 px-3 text-sm rounded-md'
-            style={{
-              background: "white",
-              color: `${theme === "light" ? "black" : "rgb(42,65,81,1)"}`,
-            }}
+        {getMessages.map((message) => (
+          <div
+            key={message._id}
+            className={`w-max mt-3 ${
+              data._id === message.senderId ? "" : "ml-auto"
+            }`}
           >
-            Hello From Hamza
-          </p>
-        </div>
-        <div className='w-max mt-3 ml-auto'>
-          <p
-            style={{
-              background: "#DCF8C6",
-              color: `${theme === "light" ? "black" : "rgb(42,65,81,1)"}`,
-            }}
-            className='py-1 px-3 text-sm rounded-md'
-          >
-            Hello From Hamza
-          </p>
-        </div>
+            <p
+              className='py-1 px-3 text-sm rounded-md'
+              style={{
+                background: `${
+                  data._id === message.senderId ? "white" : "#DCF8C6"
+                }`,
+                color: `${theme === "light" ? "black" : "rgb(42,65,81,1)"}`,
+              }}
+            >
+              {message.message}
+            </p>
+          </div>
+        ))}
       </div>
+
       <div
         className='flex flex-row items-center justify-between px-5 py-2'
         style={{

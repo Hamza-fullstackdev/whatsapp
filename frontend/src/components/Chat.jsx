@@ -25,7 +25,9 @@ const Chat = (props) => {
         console.log(error);
       }
     };
-    getMessages();
+    if (tab) {
+      getMessages();
+    }
   }, [tab, message]);
   const sendMessage = async () => {
     try {
@@ -40,7 +42,6 @@ const Chat = (props) => {
       });
       const result = await res.json();
       if (res.ok) {
-        console.log(result);
         setMessage("");
       }
     } catch (error) {
@@ -85,7 +86,9 @@ const Chat = (props) => {
           </div>
         </div>
       </div>
-      <div style={{ padding: "0 90px", marginTop: "70px", marginBottom:"70px" }}>
+      <div
+        style={{ padding: "0 90px", marginTop: "70px", marginBottom: "70px" }}
+      >
         <div className='mx-auto w-max mt-3'>
           <h3
             className='py-1 px-3 text-sm rounded-md'
@@ -97,26 +100,34 @@ const Chat = (props) => {
             Today
           </h3>
         </div>
-        {getMessages.map((message) => (
-          <div
-            key={message._id}
-            className={`w-max mt-3 ${
-              data._id === message.senderId ? "" : "ml-auto"
-            }`}
-          >
-            <p
-              className='py-1 px-3 text-sm rounded-md'
-              style={{
-                background: `${
-                  data._id === message.senderId ? "white" : "#DCF8C6"
-                }`,
-                color: `${theme === "light" ? "black" : "rgb(42,65,81,1)"}`,
-              }}
+        {getMessages.map((message) => {
+          return (
+            <div
+              key={message._id}
+              className={`w-max mt-3 ${
+                data._id === message.senderId ? "" : "ml-auto"
+              }`}
             >
-              {message.message}
-            </p>
-          </div>
-        ))}
+              <div
+                className='py-1 px-3 text-sm rounded-md'
+                style={{
+                  textAlign: "end",
+                  background: `${
+                    data._id === message.senderId ? "white" : "#DCF8C6"
+                  }`,
+                  color: `${theme === "light" ? "black" : "rgb(42,65,81,1)"}`,
+                }}
+              >
+                <p>{message.message}</p>
+                <span className='text-xs'>{`${new Date(
+                  message.createdAt
+                ).getHours()}:${new Date(
+                  message.createdAt
+                ).getMinutes()}`}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div

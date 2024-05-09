@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Avatar,
@@ -13,28 +13,62 @@ import {
 } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { app } from "../firebase/Firebase";
 
 const Signup = () => {
   const fileInputRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null); 
+  const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+  const uploadImage = async () => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + imageFile.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+    uploadTask.on("state_changed", (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      setImageFileUploadProgress(progress.toFixed(0))
+    }, (error) => {
+      setImageFileUploadError(
+        "Could not upload (File size must be less than 2mb)"
+      );
+      setImageFileUploadProgress(null);
+      setImageFile(null);
+      setImageFileUrl(null);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        setImageFileUrl(downloadURL);
+        setFormData({
+          ...formData,
+          profileimg: downloadURL,
+        });
+      });
+    });
+  };
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
-    setFormData({
-      ...formData,
-      profileimg: file,
-    });
+    if (file) {
+      setImageFile(file);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
   };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -56,7 +90,6 @@ const Signup = () => {
       });
       const data = await res.json();
       setLoading(false);
-      console.log(data);
       if (data.statusCode === 201) {
         navigate("/login");
       }
@@ -84,6 +117,13 @@ const Signup = () => {
             <span className='font-medium'>Oops!</span> {errorMessage}
           </Alert>
         )}
+        {
+          imageFileUploadError && (
+            <Alert color='failure' icon={HiInformationCircle}>
+              <span className='font-medium'>Oops!</span> {imageFileUploadError}
+            </Alert>
+          )
+        }
         <Modal.Body>
           <form onSubmit={handleFormData} encType='multipart/form-data'>
             <div className='p-2 mt-3'>
@@ -96,14 +136,15 @@ const Signup = () => {
                   rounded
                   className='cursor-pointer object-contain'
                   onClick={handleImageClick}
-                  img={selectedFile ? URL.createObjectURL(selectedFile) : ""}
+                  img={imageFileUrl || ""}
                 ></Avatar>
                 <FileInput
                   hidden
                   style={{ display: "none" }}
                   ref={fileInputRef}
                   onChange={handleFileChange}
-                  helperText={"Image should be less than 3kb (png, jpg)"}
+                  accept='image/*'
+                  helperText={imageFileUploadProgress? `Uploading Image ${imageFileUploadProgress}%`:"Image should be less than 3kb (png, jpg)"}
                 />
               </div>
               <div className='flex flex-row justify-between gap-4 mt-4'>
@@ -191,8 +232,10 @@ const Signup = () => {
               <div className='mt-3'>
                 <div className='flex-1'>
                   {loading ? (
-                    <Button style={{ background: "#51A985" }}
-                    className='w-full'>
+                    <Button
+                      style={{ background: "#51A985" }}
+                      className='w-full'
+                    >
                       <Spinner aria-label='Spinner button example' size='sm' />
                       <span className='pl-3'>Loading...</span>
                     </Button>

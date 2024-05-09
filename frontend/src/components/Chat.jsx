@@ -119,11 +119,7 @@ const Chat = (props) => {
                 }}
               >
                 <p>{message.message}</p>
-                <span className='text-xs'>{`${new Date(
-                  message.createdAt
-                ).getHours()}:${new Date(
-                  message.createdAt
-                ).getMinutes()}`}</span>
+                <span className='text-xs'>{`${String(new Date(message.createdAt).getHours()).padStart(2, '0')}:${String(new Date(message.createdAt).getMinutes()).padStart(2, '0')}`}</span>
               </div>
             </div>
           );

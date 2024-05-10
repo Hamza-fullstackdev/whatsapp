@@ -12,6 +12,7 @@ const MainSidebar = () => {
   const [query, setQuery] = useState("");
   const [searchUser, setSearchUser] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const { onlineUsers } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
   const navigate= useNavigate();
@@ -81,7 +82,7 @@ const MainSidebar = () => {
       >
         <div>
           <Link to={`/profile/${currentUser._id}`}>
-            <Avatar img={currentUser.profileimg} rounded></Avatar>
+            <Avatar img={currentUser.profileimg} rounded status="online"></Avatar>
           </Link>
         </div>
         <div className='flex items-center'>
@@ -168,6 +169,7 @@ const MainSidebar = () => {
               );
             })
           : filterUsers.map((item) => {
+              const isOnline=onlineUsers.includes(item._id)
               return (
                 <Link
                   key={item._id}
@@ -186,7 +188,7 @@ const MainSidebar = () => {
                     }}
                   >
                     <div className='w-fit'>
-                      <Avatar img={item.profileimg} rounded></Avatar>
+                      <Avatar img={item.profileimg} rounded status={isOnline?"online":''}></Avatar>
                     </div>
                     <div style={{ width: "200px" }}>
                       <h5 className='text-md font-semibold'>

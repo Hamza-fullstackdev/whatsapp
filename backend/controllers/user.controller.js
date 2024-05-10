@@ -59,6 +59,7 @@ export const updateUser = async (req, res, next) => {
           fname: req.body.fname,
           lname: req.body.lname,
           phone: req.body.phone,
+          about: req.body.about,
           profileimg: req.body.profileimg,
         },
       },

@@ -4,6 +4,7 @@ const initialState = {
   currentUser: null,
   loading: false,
   error: null,
+  onlineUsers: null,
 };
 
 const userSlice = createSlice({
@@ -59,6 +60,9 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    setOnlineUsers(state, action) {
+      state.onlineUsers = action.payload;
+    }
   },
 });
 
@@ -74,6 +78,7 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  setOnlineUsers
 } = userSlice.actions;
 
 export default userSlice.reducer;

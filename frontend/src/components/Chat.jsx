@@ -8,10 +8,12 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
+  const { onlineUsers } = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
   const [getMessages, setGetMessage] = useState([]);
   const data = props.apiData;
   const tab = props.tab;
+  const isOnline = onlineUsers.includes(tab);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -73,7 +75,7 @@ const Chat = (props) => {
               <h3 className='font-semibold'>
                 {data.fname} {data.lname}
               </h3>
-              <span className='text-sm'>Online</span>
+              <span className='text-sm'>{isOnline ? "Online" : "Offline"}</span>
             </div>
           </div>
         </Link>
@@ -119,7 +121,11 @@ const Chat = (props) => {
                 }}
               >
                 <p>{message.message}</p>
-                <span className='text-xs'>{`${String(new Date(message.createdAt).getHours()).padStart(2, '0')}:${String(new Date(message.createdAt).getMinutes()).padStart(2, '0')}`}</span>
+                <span className='text-xs'>{`${String(
+                  new Date(message.createdAt).getHours()
+                ).padStart(2, "0")}:${String(
+                  new Date(message.createdAt).getMinutes()
+                ).padStart(2, "0")}`}</span>
               </div>
             </div>
           );

@@ -4,7 +4,6 @@ import { config } from "./utils/config.util.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
-const app = express();
 const PORT = config.port || 8000;
 mongoose
   .connect(config.db)
@@ -24,11 +23,12 @@ app.use(
 import authRouter from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
 import messagesRouter from "./routes/messages.route.js";
+import { app, server } from "./socket/socket.js";
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRoute);
 app.use("/api/messages", messagesRouter);
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });
 

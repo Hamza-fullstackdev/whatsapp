@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, TextInput } from "flowbite-react";
+import { Avatar, TextInput, Toast } from "flowbite-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoSearch } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
+import { FaTelegramPlane } from "react-icons/fa";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -16,6 +17,8 @@ const Chat = (props) => {
   const { socket } = useSelector((state) => state.socket);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
+  const [toast, setToast] = useState(false);
   const [getMessages, setGetMessage] = useState([]);
   const [showEmoji, setShowEmoji] = useState(false);
   const [emoji, setEmoji] = useState("");
@@ -44,22 +47,31 @@ const Chat = (props) => {
   }, [tab]);
 
   useEffect(() => {
-    // Check if socket exists before using it
     if (socket) {
-      socket.on("newMessage", (newMessage) => {
-        // Spread the existing messages array and add the new message
-        setGetMessage((prevMessages) => [...prevMessages, newMessage]);
+      socket?.on("newMessage", (newMessage) => {
+        console.log(newMessage);
+        setToast(true);
+        setNewMessage(newMessage.message);
         const sound = new Audio(notificationSound);
         sound.play();
+        setGetMessage((prevMessages) => [...prevMessages, newMessage]);
       });
     }
   }, [socket]);
 
   useEffect(() => {
-    // Scroll to the bottom of the chat window when component updates
     chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
   }, [getMessages]);
 
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
   const sendMessage = async () => {
     try {
       const res = await fetch(`/api/messages/send/${data._id}`, {
@@ -73,7 +85,7 @@ const Chat = (props) => {
       });
       const result = await res.json();
       if (res.ok) {
-        setGetMessage((prevMessages) => [...prevMessages, result]); // Assuming the result is the newly sent message
+        setGetMessage((prevMessages) => [...prevMessages, result]);
         setMessage("");
         setShowEmoji(false);
       }
@@ -230,6 +242,22 @@ const Chat = (props) => {
               You and {data.fname} {data.lname} doesn't start conversation yet
             </h3>
           </div>
+        )}
+        {toast && (
+          <Toast style={{ position: "absolute", top: "60px", right: 0 }}>
+            <FaTelegramPlane className='h-5 w-5 text-cyan-600 dark:text-cyan-500' />
+            <div
+              className='pl-4 text-sm font-normal'
+              style={{ marginLeft: "10px" }}
+            >
+              <span>You have a new message</span>
+              <p>
+                <span className='font-semibold'>
+                  {data.fname} {data.lname}: {newMessage}
+                </span>
+              </p>
+            </div>
+          </Toast>
         )}
         <div ref={chatBottomRef}></div>
       </div>

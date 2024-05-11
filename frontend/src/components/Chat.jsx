@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import notificationSound from "../assets/notification.mp3";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
   const { onlineUsers } = useSelector((state) => state.user);
@@ -17,7 +18,7 @@ const Chat = (props) => {
   const [loading, setLoading] = useState(false);
   const [getMessages, setGetMessage] = useState([]);
   const [showEmoji, setShowEmoji] = useState(false);
-  const [emoji, setEmoji] = useState('');
+  const [emoji, setEmoji] = useState("");
   const chatBottomRef = useRef(null);
   const data = props.apiData;
   const tab = props.tab;
@@ -48,6 +49,8 @@ const Chat = (props) => {
       socket.on("newMessage", (newMessage) => {
         // Spread the existing messages array and add the new message
         setGetMessage((prevMessages) => [...prevMessages, newMessage]);
+        const sound = new Audio(notificationSound);
+        sound.play();
       });
     }
   }, [socket]);

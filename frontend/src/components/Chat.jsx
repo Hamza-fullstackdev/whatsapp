@@ -6,6 +6,7 @@ import { IoSend } from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import EmojiPicker from "emoji-picker-react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 const Chat = (props) => {
@@ -15,6 +16,8 @@ const Chat = (props) => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [getMessages, setGetMessage] = useState([]);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [emoji, setEmoji] = useState('');
   const chatBottomRef = useRef(null);
   const data = props.apiData;
   const tab = props.tab;
@@ -69,10 +72,15 @@ const Chat = (props) => {
       if (res.ok) {
         setGetMessage((prevMessages) => [...prevMessages, result]); // Assuming the result is the newly sent message
         setMessage("");
+        setShowEmoji(false);
       }
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleEmojiClick = (selectedEmoji) => {
+    setEmoji(selectedEmoji.emoji);
+    setMessage(message + emoji);
   };
   return (
     <div
@@ -89,7 +97,7 @@ const Chat = (props) => {
           padding: "4px 20px",
           position: "absolute",
           top: "0",
-          zIndex:999,
+          zIndex: 999,
           width: "-webkit-fill-available",
         }}
       >
@@ -100,7 +108,7 @@ const Chat = (props) => {
                 baseColor={theme === "light" ? "#00000036" : "#ffffff1f"}
                 highlightColor={theme === "light" ? "#ffffff1f" : "#444"}
               >
-                <Skeleton width={'50px'} height={'50px'} circle/>
+                <Skeleton width={"50px"} height={"50px"} circle />
               </SkeletonTheme>
             ) : (
               <Avatar img={data.profileimg} rounded></Avatar>
@@ -111,17 +119,18 @@ const Chat = (props) => {
                 baseColor={theme === "light" ? "#00000036" : "#ffffff1f"}
                 highlightColor={theme === "light" ? "#ffffff1f" : "#444"}
               >
-                <Skeleton width={100} count={2}/>
+                <Skeleton width={100} count={2} />
               </SkeletonTheme>
             ) : (
               <div className='ml-3'>
-              <h3 className='font-semibold'>
-                {data.fname} {data.lname}
-              </h3>
-              <span className='text-sm'>{isOnline ? "Online" : "Offline"}</span>
-            </div>
+                <h3 className='font-semibold'>
+                  {data.fname} {data.lname}
+                </h3>
+                <span className='text-sm'>
+                  {isOnline ? "Online" : "Offline"}
+                </span>
+              </div>
             )}
-           
           </div>
         </Link>
         <div className='flex flex-row items-center'>
@@ -232,7 +241,16 @@ const Chat = (props) => {
         }}
       >
         <div className='mr-3'>
-          <MdOutlineEmojiEmotions className='text-lg' />
+          <MdOutlineEmojiEmotions
+            className='text-lg cursor-pointer'
+            onClick={() => setShowEmoji(!showEmoji)}
+          />
+          <EmojiPicker
+            height={370}
+            open={showEmoji}
+            onEmojiClick={handleEmojiClick}
+            style={{ position: "absolute", top: "-350px", zIndex: 99 }}
+          />
         </div>
         <div className='w-full'>
           <TextInput
@@ -240,8 +258,9 @@ const Chat = (props) => {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={async (e) => {
               if (e.key === "Enter") {
-                await sendMessage(); // Call send message on Enter press
-                setMessage(""); // Clear message after sending
+                await sendMessage();
+                setMessage("");
+                setShowEmoji(false);
               }
             }}
             value={message}

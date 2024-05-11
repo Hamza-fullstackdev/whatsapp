@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { logoutFailure, logoutSuccess } from "../redux/user/userSlice";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const MainSidebar = () => {
   const [usersData, setUsersData] = useState([]);
   const [query, setQuery] = useState("");
@@ -14,17 +16,20 @@ const MainSidebar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { onlineUsers } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     getAllusers();
   }, []);
   useEffect(() => {
     const searchUsers = async () => {
       try {
+        setLoading(true);
         if (query) {
           const res = await fetch(`/api/user/search?query=${query}`);
           const data = await res.json();
+          setLoading(false);
           setSearchUser(data.users);
         }
       } catch (error) {
@@ -35,14 +40,16 @@ const MainSidebar = () => {
   }, [query]);
   const getAllusers = async () => {
     try {
+      setLoading(true);
       const res = await fetch("api/user/all-users");
       const data = await res.json();
+      setLoading(false);
       setUsersData(data.users);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleLogout=async()=>{
+  const handleLogout = async () => {
     try {
       const res = await fetch("/api/auth/logout", {
         method: "POST",
@@ -51,14 +58,14 @@ const MainSidebar = () => {
         },
       });
       const data = await res.json();
-      if(res.ok){
+      if (res.ok) {
         dispatch(logoutSuccess());
-        navigate('/login');
+        navigate("/login");
       }
     } catch (error) {
       dispatch(logoutFailure(error.message));
     }
-  }
+  };
   const filterUsers = usersData.filter((user) => user._id !== currentUser._id);
   const searchFilter = searchUser.filter(
     (user) => user._id !== currentUser._id
@@ -82,7 +89,20 @@ const MainSidebar = () => {
       >
         <div>
           <Link to={`/profile/${currentUser._id}`}>
-            <Avatar img={currentUser.profileimg} rounded status="online"></Avatar>
+            {loading ? (
+              <SkeletonTheme
+                baseColor={theme === "light" ? "#00000036" : "#ffffff1f"}
+                highlightColor={theme === "light" ? "#ffffff1f" : "#444"}
+              >
+                <Skeleton width={50} height={50} circle />
+              </SkeletonTheme>
+            ) : (
+              <Avatar
+                img={currentUser.profileimg}
+                rounded
+                status='online'
+              ></Avatar>
+            )}
           </Link>
         </div>
         <div className='flex items-center'>
@@ -146,30 +166,71 @@ const MainSidebar = () => {
                     }}
                   >
                     <div className='w-fit'>
-                      <Avatar img={item.profileimg} rounded></Avatar>
+                      {loading ? (
+                        <SkeletonTheme
+                          baseColor={
+                            theme === "light" ? "#00000036" : "#ffffff1f"
+                          }
+                          highlightColor={
+                            theme === "light" ? "#ffffff1f" : "#444"
+                          }
+                        >
+                          <Skeleton width={50} height={50} circle />
+                        </SkeletonTheme>
+                      ) : (
+                        <Avatar img={item.profileimg} rounded></Avatar>
+                      )}
                     </div>
-                    <div style={{ width: "200px" }}>
-                      <h5 className='text-md font-semibold'>
-                        {item.fname} {item.lname}
-                      </h5>
-                      <p className='text-sm'>{item.about}</p>
-                    </div>
-                    <div className='w-fit'>
-                      <span
-                        className='text-sm'
-                        style={{
-                          color: `${theme === "light" ? "#0000008a" : "white"}`,
-                        }}
+                    {loading ? (
+                      <SkeletonTheme
+                        baseColor={
+                          theme === "light" ? "#00000036" : "#ffffff1f"
+                        }
+                        highlightColor={
+                          theme === "light" ? "#ffffff1f" : "#444"
+                        }
                       >
-                        12:40
-                      </span>
+                        <Skeleton width={200} height={20} count={2} />
+                      </SkeletonTheme>
+                    ) : (
+                      <div style={{ width: "200px" }}>
+                        <h5 className='text-md font-semibold'>
+                          {item.fname} {item.lname}
+                        </h5>
+                        <p className='text-sm'>{item.about}</p>
+                      </div>
+                    )}
+                    <div className='w-fit'>
+                      {loading ? (
+                        <SkeletonTheme
+                          baseColor={
+                            theme === "light" ? "#00000036" : "#ffffff1f"
+                          }
+                          highlightColor={
+                            theme === "light" ? "#ffffff1f" : "#444"
+                          }
+                        >
+                          <Skeleton width={30} height={20} />
+                        </SkeletonTheme>
+                      ) : (
+                        <span
+                          className='text-sm'
+                          style={{
+                            color: `${
+                              theme === "light" ? "#0000008a" : "white"
+                            }`,
+                          }}
+                        >
+                          12:40
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>
               );
             })
           : filterUsers.map((item) => {
-              const isOnline=onlineUsers.includes(item._id)
+              const isOnline = onlineUsers.includes(item._id);
               return (
                 <Link
                   key={item._id}
@@ -188,23 +249,68 @@ const MainSidebar = () => {
                     }}
                   >
                     <div className='w-fit'>
-                      <Avatar img={item.profileimg} rounded status={isOnline?"online":''}></Avatar>
+                      {loading ? (
+                        <SkeletonTheme
+                          baseColor={
+                            theme === "light" ? "#00000036" : "#ffffff1f"
+                          }
+                          highlightColor={
+                            theme === "light" ? "#ffffff1f" : "#444"
+                          }
+                        >
+                          <Skeleton width={50} height={50} circle />
+                        </SkeletonTheme>
+                      ) : (
+                        <Avatar
+                          img={item.profileimg}
+                          rounded
+                          status={isOnline ? "online" : ""}
+                        ></Avatar>
+                      )}
                     </div>
-                    <div style={{ width: "200px" }}>
-                      <h5 className='text-md font-semibold'>
-                        {item.fname} {item.lname}
-                      </h5>
-                      <p className='text-sm'>{item.about.slice(0,30)}</p>
-                    </div>
-                    <div className='w-fit'>
-                      <span
-                        className='text-sm'
-                        style={{
-                          color: `${theme === "light" ? "#0000008a" : "white"}`,
-                        }}
+                    {loading ? (
+                      <SkeletonTheme
+                        baseColor={
+                          theme === "light" ? "#00000036" : "#ffffff1f"
+                        }
+                        highlightColor={
+                          theme === "light" ? "#ffffff1f" : "#444"
+                        }
                       >
-                        12:40
-                      </span>
+                        <Skeleton width={200} height={20} count={2} />
+                      </SkeletonTheme>
+                    ) : (
+                      <div style={{ width: "200px" }}>
+                        <h5 className='text-md font-semibold'>
+                          {item.fname} {item.lname}
+                        </h5>
+                        <p className='text-sm'>{item.about.slice(0, 30)}</p>
+                      </div>
+                    )}
+                    <div className='w-fit'>
+                      {loading ? (
+                        <SkeletonTheme
+                          baseColor={
+                            theme === "light" ? "#00000036" : "#ffffff1f"
+                          }
+                          highlightColor={
+                            theme === "light" ? "#ffffff1f" : "#444"
+                          }
+                        >
+                          <Skeleton width={30} height={20} />
+                        </SkeletonTheme>
+                      ) : (
+                        <span
+                          className='text-sm'
+                          style={{
+                            color: `${
+                              theme === "light" ? "#0000008a" : "white"
+                            }`,
+                          }}
+                        >
+                          12:40
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>

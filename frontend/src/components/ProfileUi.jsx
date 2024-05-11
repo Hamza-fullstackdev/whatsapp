@@ -16,8 +16,9 @@ const ProfileUi = (props) => {
   const [formData, setFormData] = useState({});
   const [success, setSuccess] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(null);
-  const { error, currentUser: current } = useSelector((state) => state.user);
+  const { error, currentUser: current,onlineUsers } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const isOnline=onlineUsers?.includes(currentUser._id);
   const handleSubmit = (e) => {
     setFormData({
       ...formData,
@@ -68,7 +69,7 @@ const ProfileUi = (props) => {
         {error && <Alert color={"failure"}>{error}</Alert>}
         {success && <Alert color={"success"}>{showSuccessMessage}</Alert>}
         <div>
-          <Avatar size={"xl"} rounded img={currentUser.profileimg}></Avatar>
+          <Avatar size={"xl"} rounded img={currentUser.profileimg} status={isOnline?"online":"offline"}></Avatar>
         </div>
         <div className='mt-2'>
           <Label style={{ color: "#51A985" }}>First Name:</Label>

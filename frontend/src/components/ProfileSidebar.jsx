@@ -14,10 +14,13 @@ import {
 
 const ProfileSidebar = (props) => {
   const { theme } = useSelector((state) => state.theme);
-  const { currentUser: current } = useSelector((state) => state.user);
+  const { currentUser: current, onlineUsers } = useSelector(
+    (state) => state.user
+  );
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const currentUser = props.currentUser;
+  const isOnline = onlineUsers?.includes(currentUser._id);
 
   const handleLogout = async () => {
     try {
@@ -67,7 +70,12 @@ const ProfileSidebar = (props) => {
     >
       <div style={{ marginTop: "20px", padding: "0 20px" }}>
         <div>
-          <Avatar size={"xl"} rounded img={currentUser.profileimg}></Avatar>
+          <Avatar
+            size={"xl"}
+            rounded
+            img={currentUser.profileimg}
+            status={isOnline ? "online" : "offline"}
+          ></Avatar>
         </div>
         <div className='text-center text-white mt-2'>
           <h3 className='text-xl'>
@@ -77,6 +85,12 @@ const ProfileSidebar = (props) => {
             {currentUser.country === "Pakistan" ? "+92" : "+231"}{" "}
             {currentUser.phone}
           </p>
+          <span
+            className='font-semibold'
+            style={{ color: `${theme === "light" ? "white" : "#51A985"}` }}
+          >
+            {isOnline ? "Online" : "Offline"}
+          </span>
         </div>
         <div className='mt-4'>
           {currentUser._id === current._id ? (

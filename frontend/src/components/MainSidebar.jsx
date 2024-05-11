@@ -141,12 +141,12 @@ const MainSidebar = () => {
                         theme === "light" ? "white" : "rgb(42,65,81,1)"
                       }`,
                       borderTop: `1px solid ${
-                        theme === "light" ? "#80808026" : "white"
+                        theme === "light" ? "#80808026" : "#fffafa4f"
                       }`,
                     }}
                   >
                     <div className='w-fit'>
-                      <Avatar img={item.profileimg.slice(0,30)} rounded></Avatar>
+                      <Avatar img={item.profileimg} rounded></Avatar>
                     </div>
                     <div style={{ width: "200px" }}>
                       <h5 className='text-md font-semibold'>
@@ -183,7 +183,7 @@ const MainSidebar = () => {
                         theme === "light" ? "white" : "rgb(42,65,81,1)"
                       }`,
                       borderTop: `1px solid ${
-                        theme === "light" ? "#80808026" : "white"
+                        theme === "light" ? "#80808026" : "#fffafa4f"
                       }`,
                     }}
                   >

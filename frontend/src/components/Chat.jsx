@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Avatar, TextInput } from "flowbite-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoSearch } from "react-icons/io5";
@@ -12,6 +12,7 @@ const Chat = (props) => {
   const { socket } = useSelector((state) => state.socket);
   const [message, setMessage] = useState("");
   const [getMessages, setGetMessage] = useState([]);
+  const chatBottomRef = useRef(null);
   const data = props.apiData;
   const tab = props.tab;
   const isOnline = onlineUsers?.includes(tab);
@@ -42,7 +43,12 @@ const Chat = (props) => {
       });
     }
   }, [socket]);
-  
+
+  useEffect(() => {
+    // Scroll to the bottom of the chat window when component updates
+    chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [getMessages]);
+
   const sendMessage = async () => {
     try {
       const res = await fetch(`/api/messages/send/${data._id}`, {
@@ -116,6 +122,12 @@ const Chat = (props) => {
           </h3>
         </div>
         {getMessages.map((message, index) => {
+          const hours = new Date(message.createdAt).getHours();
+          const minutes = new Date(message.createdAt).getMinutes();
+          const ampm = hours >= 12 ? "PM" : "AM";
+          const formattedHours = hours % 12 || 12;
+          const formattedMinutes = String(minutes).padStart(2, "0");
+          const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
           return (
             <div
               key={index}
@@ -126,6 +138,7 @@ const Chat = (props) => {
               <div
                 className='py-1 px-3 text-sm rounded-md'
                 style={{
+                  display: "flex",
                   textAlign: "end",
                   background: `${
                     data._id === message.senderId ? "white" : "#DCF8C6"
@@ -134,15 +147,20 @@ const Chat = (props) => {
                 }}
               >
                 <p>{message.message}</p>
-                <span className='text-xs'>{`${String(
-                  new Date(message.createdAt).getHours()
-                ).padStart(2, "0")}:${String(
-                  new Date(message.createdAt).getMinutes()
-                ).padStart(2, "0")}`}</span>
+                <span
+                  style={{
+                    fontSize: "10px",
+                    marginLeft: "12px",
+                    marginTop: "6px",
+                  }}
+                >
+                  {timeString}
+                </span>
               </div>
             </div>
           );
         })}
+        <div ref={chatBottomRef}></div>
       </div>
 
       <div

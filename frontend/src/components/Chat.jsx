@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 const Chat = (props) => {
   const { theme } = useSelector((state) => state.theme);
   const { onlineUsers } = useSelector((state) => state.user);
+  const { socket } = useSelector((state) => state.socket);
   const [message, setMessage] = useState("");
   const [getMessages, setGetMessage] = useState([]);
   const data = props.apiData;
@@ -30,7 +31,18 @@ const Chat = (props) => {
     if (tab) {
       getMessages();
     }
-  }, [tab, message]);
+  }, [tab]);
+
+  useEffect(() => {
+    // Check if socket exists before using it
+    if (socket) {
+      socket.on("newMessage", (newMessage) => {
+        // Spread the existing messages array and add the new message
+        setGetMessage((prevMessages) => [...prevMessages, newMessage]);
+      });
+    }
+  }, [socket]);
+  console.log(getMessages);
   const sendMessage = async () => {
     try {
       const res = await fetch(`/api/messages/send/${data._id}`, {
@@ -44,6 +56,7 @@ const Chat = (props) => {
       });
       const result = await res.json();
       if (res.ok) {
+        setGetMessage((prevMessages) => [...prevMessages, result]); // Assuming the result is the newly sent message
         setMessage("");
       }
     } catch (error) {
@@ -102,10 +115,10 @@ const Chat = (props) => {
             Today
           </h3>
         </div>
-        {getMessages.map((message) => {
+        {getMessages.map((message, index) => {
           return (
             <div
-              key={message._id}
+              key={index}
               className={`w-max mt-3 ${
                 data._id === message.senderId ? "" : "ml-auto"
               }`}
@@ -148,6 +161,12 @@ const Chat = (props) => {
           <TextInput
             placeholder="What's on your mind?"
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") {
+                await sendMessage(); // Call send message on Enter press
+                setMessage(""); // Clear message after sending
+              }
+            }}
             value={message}
           />
         </div>

@@ -146,13 +146,13 @@ const MainSidebar = () => {
                     }}
                   >
                     <div className='w-fit'>
-                      <Avatar img={item.profileimg} rounded></Avatar>
+                      <Avatar img={item.profileimg.slice(0,30)} rounded></Avatar>
                     </div>
                     <div style={{ width: "200px" }}>
                       <h5 className='text-md font-semibold'>
                         {item.fname} {item.lname}
                       </h5>
-                      <p className='text-sm'>Hamza is a good boy</p>
+                      <p className='text-sm'>{item.about}</p>
                     </div>
                     <div className='w-fit'>
                       <span
@@ -194,7 +194,7 @@ const MainSidebar = () => {
                       <h5 className='text-md font-semibold'>
                         {item.fname} {item.lname}
                       </h5>
-                      <p className='text-sm'>Hamza is a good boy</p>
+                      <p className='text-sm'>{item.about.slice(0,30)}</p>
                     </div>
                     <div className='w-fit'>
                       <span

@@ -14,7 +14,7 @@ const Chat = (props) => {
   const [getMessages, setGetMessage] = useState([]);
   const data = props.apiData;
   const tab = props.tab;
-  const isOnline = onlineUsers.includes(tab);
+  const isOnline = onlineUsers?.includes(tab);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -42,7 +42,7 @@ const Chat = (props) => {
       });
     }
   }, [socket]);
-  console.log(getMessages);
+  
   const sendMessage = async () => {
     try {
       const res = await fetch(`/api/messages/send/${data._id}`, {

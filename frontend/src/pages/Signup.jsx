@@ -178,6 +178,7 @@ const Signup = () => {
                     <Label htmlFor='country' value='Select your country' />
                   </div>
                   <Select id='country' required onChange={handleChange}>
+                    <option value={""} selected disabled>Select Country</option>
                     <option value={"Pakistan"}>Pakistan</option>
                     <option value={"India"}>India</option>
                     <option value={"United States"}>Usa</option>

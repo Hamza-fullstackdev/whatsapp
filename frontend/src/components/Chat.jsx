@@ -49,7 +49,6 @@ const Chat = (props) => {
   useEffect(() => {
     if (socket) {
       socket?.on("newMessage", (newMessage) => {
-        console.log(newMessage);
         setToast(true);
         setNewMessage(newMessage.message);
         const sound = new Audio(notificationSound);

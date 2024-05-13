@@ -230,7 +230,7 @@ const MainSidebar = () => {
               );
             })
           : filterUsers.map((item) => {
-              const isOnline = onlineUsers.includes(item._id);
+              const isOnline = onlineUsers?.includes(item._id);
               return (
                 <Link
                   key={item._id}

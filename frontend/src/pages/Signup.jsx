@@ -13,14 +13,19 @@ import {
 } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { app } from "../firebase/Firebase";
 
 const Signup = () => {
   const fileInputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null); 
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
@@ -38,26 +43,31 @@ const Signup = () => {
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setImageFileUploadProgress(progress.toFixed(0))
-    }, (error) => {
-      setImageFileUploadError(
-        "Could not upload (File size must be less than 2mb)"
-      );
-      setImageFileUploadProgress(null);
-      setImageFile(null);
-      setImageFileUrl(null);
-    },
-    () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        setImageFileUrl(downloadURL);
-        setFormData({
-          ...formData,
-          profileimg: downloadURL,
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageFileUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setImageFileUploadError(
+          "Could not upload (File size must be less than 2mb)"
+        );
+        setImageFileUploadProgress(null);
+        setImageFile(null);
+        setImageFileUrl(null);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageFileUrl(downloadURL);
+          setFormData({
+            ...formData,
+            profileimg: downloadURL,
+          });
         });
-      });
-    });
+      }
+    );
   };
   const handleImageClick = () => {
     fileInputRef.current.click();
@@ -117,13 +127,11 @@ const Signup = () => {
             <span className='font-medium'>Oops!</span> {errorMessage}
           </Alert>
         )}
-        {
-          imageFileUploadError && (
-            <Alert color='failure' icon={HiInformationCircle}>
-              <span className='font-medium'>Oops!</span> {imageFileUploadError}
-            </Alert>
-          )
-        }
+        {imageFileUploadError && (
+          <Alert color='failure' icon={HiInformationCircle}>
+            <span className='font-medium'>Oops!</span> {imageFileUploadError}
+          </Alert>
+        )}
         <Modal.Body>
           <form onSubmit={handleFormData} encType='multipart/form-data'>
             <div className='p-2 mt-3'>
@@ -144,7 +152,11 @@ const Signup = () => {
                   ref={fileInputRef}
                   onChange={handleFileChange}
                   accept='image/*'
-                  helperText={imageFileUploadProgress? `Uploading Image ${imageFileUploadProgress}%`:"Image should be less than 3kb (png, jpg)"}
+                  helperText={
+                    imageFileUploadProgress
+                      ? `Uploading Image ${imageFileUploadProgress}%`
+                      : "Image should be less than 3kb (png, jpg)"
+                  }
                 />
               </div>
               <div className='flex flex-row justify-between gap-4 mt-4'>
@@ -178,7 +190,9 @@ const Signup = () => {
                     <Label htmlFor='country' value='Select your country' />
                   </div>
                   <Select id='country' required onChange={handleChange}>
-                    <option value={""} selected disabled>Select Country</option>
+                    <option value={""} selected disabled>
+                      Select Country
+                    </option>
                     <option value={"Pakistan"}>Pakistan</option>
                     <option value={"India"}>India</option>
                     <option value={"United States"}>Usa</option>
@@ -200,6 +214,18 @@ const Signup = () => {
               </div>
               <div>
                 <div className='mb-1 mt-2'>
+                  <Label htmlFor='email' value='Email' />
+                </div>
+                <TextInput
+                  id='email'
+                  type='email'
+                  required
+                  placeholder='johndoe@gmail.com'
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <div className='mb-1 mt-2'>
                   <Label htmlFor='password' value='Password' />
                 </div>
                 <TextInput
@@ -210,13 +236,13 @@ const Signup = () => {
               </div>
               <div>
                 <div className='mb-1 mt-2'>
-                  <Label htmlFor='about' value='About'/>
+                  <Label htmlFor='about' value='About' />
                 </div>
                 <TextInput
                   id='about'
                   placeholder='Cant talk, whatsapp only'
                   onChange={handleChange}
-                  autoComplete="off"
+                  autoComplete='off'
                 />
               </div>
               <div className='flex justify-between mt-3'>
